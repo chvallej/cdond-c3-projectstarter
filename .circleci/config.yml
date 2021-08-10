@@ -116,8 +116,9 @@ jobs:
             curl -X PUT \
               --header "Content-Type: text/plain" \
               --header "token: ${CIRCLE_WORKFLOW_ID:0:7}" \
-              --data ${BACKURL} \ 
-              --url https://api.memstash.io/values/back_url
+              --url https://api.memstash.io/values/back_url \
+              --data $BACKURL
+
       - run:
           name: Ensure front-end infrastructure exist
           command: |
