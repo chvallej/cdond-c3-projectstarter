@@ -1,5 +1,14 @@
 version: 2.1
-
+commands:
+  destroy-environment:
+    description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
+    steps:
+      - run:
+          name: Destroy environments
+          when: on_fail
+          command: |
+            aws cloudformation delete-stack --stack-name backendstack-${CIRCLE_WORKFLOW_ID:0:7}
+            aws cloudformation delete-stack --stack-name frontendstack-${CIRCLE_WORKFLOW_ID:0:7}
 jobs:
   build-frontend:
     docker:
@@ -100,7 +109,11 @@ jobs:
               --template-file .circleci/files/backend.yml \
               --tags project=Udapeople \
               --stack-name backendstack-${CIRCLE_WORKFLOW_ID:0:7} \
+              --region ${AWS_DEFAULT_REGION} \
               --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:7}
+            BACKURL=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:Name,Values=Udapeople" --output text)
+            echo ${BACKURL}
+            curl -H "Content-Type: text/plain" -H "token: ${CIRCLE_WORKFLOW_ID:0:7}" --request PUT --data ${BACKURL} https://api.memstash.io/values/back_url
       - run:
           name: Ensure front-end infrastructure exist
           command: |
@@ -108,12 +121,14 @@ jobs:
               --template-file .circleci/files/frontend.yml \
               --tags project=Udapeople \
               --stack-name frontendstack-${CIRCLE_WORKFLOW_ID:0:7} \
+              --region ${AWS_DEFAULT_REGION} \
               --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:7}
       - run:
           name: Add back-end ip to ansible inventory
           command: |
             aws ec2 describe-instances  \
               --query 'Reservations[*].Instances[*].PublicIpAddress'\
+              --region ${AWS_DEFAULT_REGION} \
               --filters "Name=tag:project,Values=Udapeople"\
               --output text >> .circleci/ansible/inventory
       - run: yum -y install tar gzip
@@ -121,7 +136,26 @@ jobs:
           root: ~/
           paths:
             - project/.circleci/ansible/inventory.txt
-      # Here's where you will add some code to rollback on failure
+      - destroy-environment
+  configure-infrastructure:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["1d:96:3a:0e:65:75:45:85:8a:37:e3:29:13:9a:e6:dc"]
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --update ansible
+      - run:
+          name: Configure server
+          command: |
+            cd .circleci/ansible
+            ansible-playbook -i inventory.txt main.yml
+      - destroy-environment
 
 workflows:
   default:
