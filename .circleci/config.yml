@@ -113,7 +113,7 @@ jobs:
               --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:7}
             BACKURL=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:Name,Values=Udapeople" --output text)
             echo ${BACKURL}
-            curl -H "Content-Type: text/plain" -H "token: ${CIRCLE_WORKFLOW_ID:0:7}" --request PUT --data ${BACKURL} https://api.memstash.io/values/back_url
+            curl -H "Content-Type: text/plain" -H "token: ${CIRCLE_WORKFLOW_ID:0:7}" --request PUT --data "${BACKURL}" https://api.memstash.io/values/back_url
       - run:
           name: Ensure front-end infrastructure exist
           command: |
@@ -156,6 +156,22 @@ jobs:
             cd .circleci/ansible
             ansible-playbook -i inventory.txt main.yml
       - destroy-environment
+  run-migrations:
+    docker:
+      # Docker image here that supports NodeJS
+    steps:
+      # Checkout code from git
+      - run:
+          name: Run migrations
+          command: |
+            # Your code here
+            exit 1
+      - run:
+          name: Send migration results to memstash
+          command: |
+            # Your code here
+            exit 1
+      # Here's where you will add some code to rollback on failure
 
 workflows:
   default:
