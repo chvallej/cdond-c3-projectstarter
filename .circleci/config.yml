@@ -18,7 +18,7 @@ commands:
           when: on_fail
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            SUCCESS = $(curl -H "token: migration-${CIRCLE_WORKFLOW_ID}" --request GET https://api.memstash.io/values/migration_result)
+            SUCCESS=$(curl -H "token: migration-${CIRCLE_WORKFLOW_ID}" --request GET https://api.memstash.io/values/migration_result)
             if(( $SUCCESS==1 )); 
             then
               cd backend
@@ -186,6 +186,11 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
+      - run:
+          name: install awscli
+          command: |
+            sudo apt-get update
+            sudo apt-get -y install awscli
       - run:
           name: Run migrations
           command: |
