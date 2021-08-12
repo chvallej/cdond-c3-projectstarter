@@ -152,7 +152,8 @@ jobs:
               --query 'Reservations[*].Instances[*].PublicIpAddress'\
               --region ${AWS_DEFAULT_REGION} \
               --filters "Name=tag:project,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}"\
-              --output text >> .circleci/ansible/inventory
+              --output text >> .circleci/ansible/inventory.txt
+            cat ".circleci/ansible/inventory.txt"
       - run: yum -y install tar gzip
       - persist_to_workspace:
           root: ~/
