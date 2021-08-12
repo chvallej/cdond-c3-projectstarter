@@ -126,7 +126,6 @@ jobs:
               --template-file .circleci/files/backend.yml \
               --tags project=Udapeople \
               --stack-name backendstack-${CIRCLE_WORKFLOW_ID:0:7} \
-              --region ${AWS_DEFAULT_REGION} \
               --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:7}
             BACKURL=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" --output text)
             echo ${BACKURL}
@@ -143,14 +142,12 @@ jobs:
               --template-file .circleci/files/frontend.yml \
               --tags project=Udapeople \
               --stack-name frontendstack-${CIRCLE_WORKFLOW_ID:0:7} \
-              --region ${AWS_DEFAULT_REGION} \
               --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:7}
       - run:
           name: Add back-end ip to ansible inventory
           command: |
             aws ec2 describe-instances  \
               --query 'Reservations[*].Instances[*].PublicIpAddress'\
-              --region ${AWS_DEFAULT_REGION} \
               --filters "Name=tag:project,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}"\
               --output text >> .circleci/ansible/inventory.txt
             cat ".circleci/ansible/inventory.txt"
