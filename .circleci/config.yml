@@ -196,6 +196,8 @@ jobs:
           name: Run migrations
           command: |
             cd backend
+            echo $TYPEORM_PORT
+            echo $TYPEORM_HOST
             npm i
             npm run migrations >> migrations_result.txt
       - run:
