@@ -205,7 +205,7 @@ jobs:
           command: |
             cd backend
             RESULT=$(grep -Fc "has been executed successfully" migrations_result.txt)
-            curl -H "Content-Type: text/plain" -H "token: migration-${CIRCLE_WORKFLOW_ID}" --request PUT --data ${RESULT} https://api.memstash.io/values/migration_result
+            curl -H "Content-Type: text/plain" -H "token: migration-${CIRCLE_WORKFLOW_ID:0:7}" --request PUT --data ${RESULT} https://api.memstash.io/values/migration_result
       # Here's where you will add some code to rollback on failure
       - revert-migrations
       - destroy-environment
@@ -228,7 +228,7 @@ jobs:
           command: |
             # your code here
             cd frontend/
-            BACKENDIP=$(curl -H "token: ${CIRCLE_WORKFLOW_ID}" --request GET https://api.memstash.io/values/public_dns)
+            BACKENDIP=$(curl -H "token: ${CIRCLE_WORKFLOW_ID:0:7}" --request GET https://api.memstash.io/values/public_dns)
             echo API_URL="http://${BACKENDIP}:3030" > ".env"
             cat .env
             export API_URL="http://${BACKEND_IP}:3030"
@@ -240,7 +240,7 @@ jobs:
             cd frontend
             npm i
             npm run build
-            aws s3 sync ./dist s3://"udapeople-${CIRCLE_WORKFLOW_ID}"
+            aws s3 sync ./dist s3://"udapeople-${CIRCLE_WORKFLOW_ID:0:7}"
       # Here's where you will add some code to rollback on failure
       - revert-migrations
       - destroy-environment
