@@ -12,9 +12,9 @@ commands:
       - run:
           name: Delete all files in the current S3 bucket
           command: |
-            if aws s3api head-bucket --bucket udapeople-s3bucket-${CIRCLE_WORKFLOW_ID:0:7}
+            if aws s3api head-bucket --bucket udapeople-${CIRCLE_WORKFLOW_ID:0:7}
             then
-              aws s3 rm s3://udapeople-s3bucket-${CIRCLE_WORKFLOW_ID:0:7}/ --recursive
+              aws s3 rm s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}/ --recursive
             fi
           when: on_fail
   revert-migrations:
@@ -306,7 +306,9 @@ jobs:
           command: |
             # your code here
             BACKURL=$(curl -H "token: ${CIRCLE_WORKFLOW_ID:0:7}" --request GET https://api.memstash.io/values/back_url)
+            echo $BACKURL
             STATUSAPI="https://${BACKURL}:3030/api/status"
+            echo $STATUSAPI
             if curl -s --head ${STATUSAPI}
             then
               echo "OK"
@@ -317,7 +319,7 @@ jobs:
           name: Frontend smoke test.
           command: |
             # your code here
-            URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-west-2.amazonaws.com"
+            URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-east-1.amazonaws.com"
             if ( curl -s ${URL} | grep "Welcome" )
             then
               return 0
