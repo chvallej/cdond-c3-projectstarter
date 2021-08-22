@@ -220,7 +220,7 @@ jobs:
           name: Install dependencies
           command: |
             yum install -y gcc-c++ make 
-            curl -sL https://rpm.nodesource.com/setup_10.x | sudo bash -
+            curl -fsSL https://rpm.nodesource.com/setup_lts.x | bash -
             yum install -y nodejs
             node -v
       - run:
@@ -272,7 +272,8 @@ jobs:
             cd backend
             npm i
             npm run build
-            tar -cf backend.tar ./backend/dist
+            tar -cf backend.tar ./dist
+            cd ..
             ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/deploy-backend.yml
       # Here's where you will add some code to rollback on failure
       - revert-migrations
