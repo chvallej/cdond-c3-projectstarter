@@ -205,6 +205,7 @@ jobs:
           command: |
             cd backend
             RESULT=$(grep -Fc "has been executed successfully" migrations_result.txt)
+            echo ${RESULT}
             curl -H "Content-Type: text/plain" -H "token: migration-${CIRCLE_WORKFLOW_ID:0:7}" --request PUT --data ${RESULT} https://api.memstash.io/values/migration_result
       # Here's where you will add some code to rollback on failure
       - revert-migrations
