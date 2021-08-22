@@ -237,10 +237,10 @@ jobs:
           command: |
             # your code here
             cd frontend/
-            BACKENDIP=$(curl -H "token: ${CIRCLE_WORKFLOW_ID:0:7}" --request GET https://api.memstash.io/values/public_dns)
-            echo API_URL="http://${BACKENDIP}:3030" > ".env"
+            BACKURL=$(curl -H "token: ${CIRCLE_WORKFLOW_ID:0:7}" --request GET https://api.memstash.io/values/back_url)
+            echo API_URL="http://${BACKURL}:3030" > ".env"
             cat .env
-            export API_URL="http://${BACKEND_IP}:3030"
+            export API_URL="http://${BACKURL}:3030"
             echo "${API_URL}"
       - run:
           name: Deploy frontend objects
