@@ -265,7 +265,7 @@ jobs:
           fingerprints: ["1d:96:3a:0e:65:75:45:85:8a:37:e3:29:13:9a:e6:dc"]
       # attach workspace
       - attach_workspace:
-          at: .
+          at: ~/
       - run:
           name: Install dependencies
           command: |
@@ -283,7 +283,8 @@ jobs:
             npm run build
             tar -cf backend.tar ./dist
             cd ..
-            ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/deploy-backend.yml
+            cd .circleci/ansible
+            ansible-playbook -i inventory.txt deploy-backend.yml
       # Here's where you will add some code to rollback on failure
       - revert-migrations
       - destroy-environment
@@ -307,7 +308,7 @@ jobs:
             # your code here
             BACKURL=$(curl -H "token: ${CIRCLE_WORKFLOW_ID:0:7}" --request GET https://api.memstash.io/values/back_url)
             echo $BACKURL
-            STATUSAPI="https://${BACKURL}:3030/api/status"
+            STATUSAPI="http://${BACKURL}:3030/api/status"
             echo $STATUSAPI
             if curl -s --head ${STATUSAPI}
             then
