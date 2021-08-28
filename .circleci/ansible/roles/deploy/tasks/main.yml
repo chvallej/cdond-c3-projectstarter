@@ -9,19 +9,20 @@
   become: true
   shell: |
     tar -xvf backend.tar
+
 - name: "install node dependencies"
   become: true
   shell: |
-    cd backend/
+    cd /home/ubuntu/backend
     npm i
 - name: "build"
   become: true
   shell: |
-    cd backend/
+    cd /home/ubuntu/backend
     npm run build
 
 - name: "pm2 start"
   become: true
   shell: |
-    cd backend/
+    cd /home/ubuntu/backend
     pm2 start npm --name backend -- start
