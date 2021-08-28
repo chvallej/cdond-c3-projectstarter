@@ -281,7 +281,7 @@ jobs:
             cd backend
             npm i
             npm run build
-            tar -cvf backend.tar ./dist
+            tar -cf backend.tar ./dist
             pwd
             ls
             ansible-playbook -i ../.circleci/ansible/inventory.txt ../.circleci/ansible/deploy-backend.yml

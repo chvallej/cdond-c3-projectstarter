@@ -15,23 +15,9 @@
   shell: |
     tar -xvf backend.tar -C /home/ubuntu/backend
 
-- name: "install node dependencies"
-  become: true
-  shell: |
-    npm i
-  args:
-    chdir: /home/ubuntu/backend
-
-- name: "build"
-  become: true
-  shell: |
-    npm run build
-  args:
-    chdir: /home/ubuntu/backend
-
 - name: "pm2 start"
   become: true
   shell: |
-    pm2 start npm --name backend -- start
+    pm2 start -f ./main.js
   args:
     chdir: /home/ubuntu/backend
