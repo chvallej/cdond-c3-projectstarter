@@ -5,10 +5,15 @@
     src: /root/project/backend/backend.tar
     dest: /home/ubuntu/
 
+- name: "create directory"
+  file:
+    path: /home/ubuntu/backend
+    state: directory
+
 - name: "un tar files"
   become: true
   shell: |
-    tar -xvf backend.tar
+    tar -xvf backend.tar -C /home/ubuntu/backend
 
 - name: "install node dependencies"
   become: true
