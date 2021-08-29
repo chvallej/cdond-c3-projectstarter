@@ -1,0 +1,5 @@
+URL01: https://github.com/chvallej/cdond-c3-projectstarter
+URL02: http://udapeople-4c4d01c.s3-website-us-east-1.amazonaws.com
+URL03: https://d37t0o1qhy9p20.cloudfront.net
+URL04: http://54.162.167.116:3030/api/status
+URL05: http://ec2-3-82-250-166.compute-1.amazonaws.com:9090/
