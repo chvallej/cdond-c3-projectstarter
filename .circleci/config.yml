@@ -293,13 +293,10 @@ jobs:
           name: Deploy backend
           command: |
             # your code here
-            cd backend
-            npm i
-            npm run build
-            tar -cf backend.tar ./dist
+            tar -cf backend.tar ./backend
             pwd
             ls
-            ansible-playbook -i ../.circleci/ansible/inventory.txt ../.circleci/ansible/deploy-backend.yml
+            ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/deploy-backend.yml
       # Here's where you will add some code to rollback on failure
       - revert-migrations
       - destroy-environment
