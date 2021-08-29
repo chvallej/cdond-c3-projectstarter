@@ -1,21 +1,4 @@
 ---
-- name: "create directory"
-  file:
-    path: /home/ubuntu/backend
-    state: directory
-
-- name: "save enviroment variables"
-  become: true
-  copy:
-    src: /root/project/backend/.env
-    dest: /home/ubuntu/backend/
-
-- name: "copy package.json file"
-  become: true
-  copy:
-    src: /root/project/backend/package.json
-    dest: /home/ubuntu/backend/
-
 - name: "update apt packages."
   become: yes
   apt:
