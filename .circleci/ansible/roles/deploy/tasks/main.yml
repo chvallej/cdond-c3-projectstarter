@@ -18,6 +18,6 @@
 - name: "pm2 start"
   become: true
   shell: |
-    pm2 start -f ./main.js
+    pm2 start npm --name backend -- start
   args:
-    chdir: /home/ubuntu/backend/dist
+    chdir: /home/ubuntu/backend/backend

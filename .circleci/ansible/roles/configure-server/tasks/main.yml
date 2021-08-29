@@ -1,4 +1,10 @@
 ---
+- name: "save enviroment variables"
+  become: true
+  copy:
+    src: /root/project/backend/.env
+    dest: /home/ubuntu/backend/
+
 - name: "update apt packages."
   become: yes
   apt:
